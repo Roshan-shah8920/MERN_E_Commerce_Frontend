@@ -3,112 +3,91 @@ import AppContext from "../context/AppContext";
 import axios from "axios";
 import TableProduct from "./TableProduct";
 import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Checkout = () => {
-  const { cart, userAddress, url, user, clearCart } = useContext(AppContext);
+  const { cart, userAddress, url, user } = useContext(AppContext);
   const [qty, setQty] = useState(0);
   const [price, setPrice] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    let qty = 0;
-    let price = 0;
-    if (cart?.items) {
-      for (let i = 0; i < cart.items?.length; i++) {
-        qty += cart.items[i].qty;
-        price += cart.items[i].price;
-      }
+    let totalQty = 0;
+    let totalPrice = 0;
+    if (cart?.items?.length > 0) {
+      cart.items.forEach((item) => {
+        totalQty += item.qty;
+        totalPrice += item.qty * item.price;
+      });
     }
-    setPrice(price);
-    setQty(qty);
+    setQty(totalQty);
+    setPrice(totalPrice);
   }, [cart]);
 
   const handlePayment = async () => {
     try {
-      console.log("Token being sent in headers:", user?.token); // Debugging Token
+      if (!user || !user._id) {
+        alert("❌ User not logged in!");
+        navigate("/login");
+        return;
+      }
 
-      const orderResponse = await axios.post(`${url}/payment/checkout`, {
-        amount: price,
-        qty: qty,
-        cartItems: cart?.items,
-        userShipping: userAddress,
-        userId: user._id,
-      }, {
-        headers: {
-          "Auth": user?.token  // Ensure token is properly set
+      // Token ko AppState se ya localStorage se fetch kar rahe hain.
+      const userToken = localStorage.getItem("token");
+      if (!userToken) {
+        alert("❌ Authentication token not found!");
+        navigate("/login");
+        return;
+      }
+
+      const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+      if (!stripePublicKey) {
+        alert("❌ Stripe Public Key is missing!");
+        return;
+      }
+
+      const stripe = await loadStripe(stripePublicKey);
+
+      // URL banane me extra '/api' add na karein, kyunki 'url' already isko contain karta hai.
+      const orderResponse = await axios.post(
+        `${url}/payment/checkout`,
+        {
+          amount: price,
+          cartItems: cart?.items,
+          userShipping: userAddress,
+          userId: user._id,
+        },
+        {
+          headers: { Auth: userToken },
         }
-      });
+      );
 
+      if (!orderResponse.data.sessionId) {
+        alert("❌ Payment session failed!");
+        return;
+      }
 
+      const { sessionId } = orderResponse.data;
+      const result = await stripe.redirectToCheckout({ sessionId });
 
-      console.log(" order response ", orderRepons);
-      const { orderId, amount: orderAmount } = orderRepons.data;
-
-      var options = {
-        key: "rzp_test_gHH711O4gcSjCq",
-        amount: orderAmount * 100,
-        currency: "INR",
-        name: "Roshan",
-        description: "Web Dev Mastery",
-
-        order_id: orderId,
-        handler: async function (response) {
-          const paymentData = {
-            orderId: response.razorpay_order_id,
-            paymentId: response.razorpay_payment_id,
-            signature: response.razorpay_signature,
-            amount: orderAmount,
-            orderItems: cart?.items,
-            userId: user._id,
-            userShipping: userAddress,
-          };
-
-          const api = await axios.post(
-            `${url}/payment/verify-payment`,
-            paymentData
-          );
-
-          console.log("razorpay res ", api.data);
-
-          if (api.data.success) {
-            clearCart();
-            navigate("/oderconfirmation");
-          }
-        },
-        prefill: {
-          name: "Roshan",
-          email: "rs20150190128@gmail.com",
-          contact: "8920905122",
-        },
-        notes: {
-          address: "premnagar-1",
-        },
-        theme: {
-          color: "#3399cc",
-        },
-      };
-      const rzp = new window.Razorpay(options);
-      rzp.open();
+      if (result.error) {
+        alert(`❌ Payment Error: ${result.error.message}`);
+      }
     } catch (error) {
-      console.log(error);
+      console.error("❌ Payment Error:", error.response?.data || error.message);
+      alert(`❌ Payment Error: ${error.response?.data?.message || error.message}`);
     }
   };
 
   return (
     <>
-      <div className="container  my-3">
+      <div className="container my-3">
         <h1 className="text-center">Order Summary</h1>
-
         <table className="table table-bordered border-primary bg-dark">
           <thead className="bg-dark">
             <tr>
-              <th scope="col" className="bg-dark text-light text-center">
-                Product Details
-              </th>
-
-              <th scope="col" className="bg-dark text-light text-center">
-                Shipping Address
-              </th>
+              <th className="bg-dark text-light text-center">Product Details</th>
+              <th className="bg-dark text-light text-center">Shipping Address</th>
             </tr>
           </thead>
           <tbody className="bg-dark">
@@ -118,26 +97,25 @@ const Checkout = () => {
               </td>
               <td className="bg-dark text-light">
                 <ul style={{ fontWeight: "bold" }}>
-                  <li>Name : {userAddress?.fullName}</li>
-                  <li>Phone : {userAddress?.phoneNumber}</li>
-                  <li>Country : {userAddress?.country}</li>
-                  <li>State : {userAddress?.state}</li>
-                  <li>PinCode : {userAddress?.pincode}</li>
-                  <li>Near By : {userAddress?.address}</li>
+                  <li>Name: {userAddress?.fullName}</li>
+                  <li>Phone: {userAddress?.phoneNumber}</li>
+                  <li>Country: {userAddress?.country}</li>
+                  <li>State: {userAddress?.state}</li>
+                  <li>PinCode: {userAddress?.pincode}</li>
+                  <li>Address: {userAddress?.address}</li>
                 </ul>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
       <div className="container text-center my-5">
         <button
           className="btn btn-secondary btn-lg"
           style={{ fontWeight: "bold" }}
           onClick={handlePayment}
         >
-          Procced To Pay
+          Proceed To Pay
         </button>
       </div>
     </>

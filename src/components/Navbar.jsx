@@ -26,8 +26,9 @@ const Navbar = () => {
                     </Link>
                     <form onSubmit={onSubmitHandler} className="search-bar">
                         <CiSearch className='icon' />
-                        <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className='search' type="text" placeholder='Search Punherbs.in' />
+                        <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className='search' type="text" placeholder='Search Punherbs.in'/>
                     </form>
+                   
                     <div className="right">
                         
                         {isAuthentication ? <>

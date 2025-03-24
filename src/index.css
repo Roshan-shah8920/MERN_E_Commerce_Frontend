@@ -85,63 +85,279 @@ body::-webkit-scrollbar{
   margin-left: -140px;
 } */
 
-.nav{
-  max-width: 1550px;
-}
-.nav-bar{
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background: white;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 
-  0 6px 20px rgba(0, 0, 0, 0.15);
-}
-.search-bar {
-  display: flex;
-  align-items: center;
-  border: 2px solid #febd69; 
-  border-radius: 50px;
-  overflow: hidden;
-  background-color: white;
-  width: 400px;
-  padding: 5px 10px;
+  .nav{
+    max-width: 1550px;
+  }
+  .nav-bar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 
+    0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+  .search-bar {
+    display: flex;
+    align-items: center;
+    border: 2px solid #febd69; 
+    border-radius: 50px;
+    overflow: hidden;
+    background-color: white;
+    width: 400px;
+    padding: 5px 10px;
+  }
+
+  .search {
+    flex: 1;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    outline: none;
+  }
+
+  .icon {
+    font-size: 20px;
+    color: gray;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+
+
+  .search{
+    padding: 5px;
+    /* width: 450px; */
+  }
+  .right{
+    padding: 10px;
+    font-size: 30px;
+    /* width: 30%; */
+  }
+  .logo{
+    /* background-color: rebeccapurple; */
+    color: green;
+    height: 80px;
+    width: 250%;
+    font-size: xx-small;
+  }
+  .nav-bar {
+    background-color: rgb(113, 187, 113);
+  }
+  li{
+    list-style: none;
+    text-decoration: none;
+  }
+  a{
+    text-decoration: none;
+  }
+
+  /* Default Navbar Styling */
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: green;
+  }
+
+  .navbar .menu {
+    display: flex;
+    gap: 15px;
+  }
+
+  .navbar .menu a {
+    color: white;
+    text-decoration: none;
+  }
+
+  /* Mobile View ke liye */
+  @media screen and (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .menu {
+      flex-direction: column;
+      width: 100%;
+      text-align: left;
+    }
+
+    .menu a {
+      padding: 10px;
+      display: block;
+    }
+  }
+
+
+/* footerlogo */
+.lo{
+  width: 200px;
+  height: 140px;
 }
 
-.search {
-  flex: 1;
+
+
+
+/* Responsive Navbar */
+/* Navbar Base Styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 15px;
-  font-size: 16px;
-  border: none;
-  outline: none;
+  background-color: green;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
-.icon {
+.navbar .logo {
+  color: white;
   font-size: 20px;
-  color: gray;
-  margin-left: 10px;
+  font-weight: bold;
+}
+
+/* Hamburger Menu Styling */
+.hamburger {
+  display: none;
+  font-size: 24px;
+  color: white;
   cursor: pointer;
 }
 
-
-.search{
-  padding: 5px;
-  /* width: 450px; */
-}
-.right{
-  padding: 10px;
-  font-size: 30px;
-  /* width: 30%; */
-}
-.logo{
-  /* background-color: rebeccapurple; */
-  color: green;
-  height: 80px;
-  width: 250%;
-  font-size: xx-small;
-}
-.nav-bar {
-  background-color: rgb(113, 187, 113);
+/* Default Menu */
+.menu {
+  display: flex;
+  gap: 10px;
 }
 
+.menu a {
+  color: white;
+  text-decoration: none;
+  background: blue;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* Mobile View Fix */
+@media screen and (max-width: 768px) {
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo{
+    width: 100px;
+  }
+  .search-bar{
+    display: none;
+    width: 120px;
+    margin-left: 20px;
+  }
+  .right{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  .btn{
+    font-size: 10px;
+  }
+  .hamburger {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.9);
+    width: 200px;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .menu.show {
+    display: flex;
+  }
+
+  .menu a {
+    display: block;
+    padding: 10px;
+    color: white;
+    background: none;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .menu a:last-child {
+    border-bottom: none;
+  }
+}
+
+
+/* cart page responsive */
+/* ✅ Cart container responsive karega */
+@media screen and (max-width: 400px) {
+  .container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  /* ✅ Total Qty & Price buttons */
+  .d-flex.justify-content-center {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn-warning,
+  .btn-info {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* ✅ Cart items ko stack format me dikhana */
+  .row.bg-dark {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+
+  /* ✅ Product Image */
+  .col-md-2 {
+    margin-bottom: 10px;
+  }
+
+  .col-md-2 img {
+    max-width: 60px; /* Small image */
+  }
+
+  /* ✅ Buttons responsive karna */
+  .col-md-4 {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .btn-sm {
+    width: 80px;
+    margin: 5px 0;
+  }
+
+  /* ✅ Empty cart message center align */
+  .text-center.text-muted {
+    font-size: 24px !important;
+    margin-top: 80px !important;
+  }
+
+  /* ✅ Checkout & Clear Cart buttons */
+  .container.text-center button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}

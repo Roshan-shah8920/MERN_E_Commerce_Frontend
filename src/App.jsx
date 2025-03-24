@@ -13,6 +13,7 @@ import Cart from "./components/Cart"
 import Address from './components/Address'
 import Checkout from './components/Checkout'
 import OrderConfirmation from './components/OrderConfirmation'
+import Footer from './components/Footer'
 
 
 
@@ -32,8 +33,8 @@ const App = () => {
         <Route path='/shipping' element={<Address/>}/>
         <Route path='/checkout' element={<Checkout/>}/>
         <Route path='/OrderConfirmation' element={<OrderConfirmation/>}/>
-        
       </Routes>
+      <Footer/>
     </Router>
   )
 }
