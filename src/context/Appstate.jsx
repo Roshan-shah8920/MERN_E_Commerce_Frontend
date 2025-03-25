@@ -4,8 +4,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Appstate = (props) => {
-  // const url = "http://localhost:3000/api";
-  const url = "https://mern-e-commerce-11-6.onrender.com/api";
+  const url = "http://localhost:3000/api";
+  // const url = "https://mern-e-commerce-11-6.onrender.com/api";
 
   console.log("url",url);
   

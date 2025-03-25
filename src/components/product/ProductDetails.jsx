@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import axios from 'axios'
 import RealatedProduct from './RealatedProduct';
 
-const ProductDetails = () => {
 
+const ProductDetails = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     let url = "http://localhost:3000/api"
     const [product, setpPoduct] = useState()
@@ -45,7 +46,7 @@ const ProductDetails = () => {
 
 
                     <div className="mt-3">
-                        <button className="btn btn-danger mx-2 px-4 py-2 fw-bold shadow">Buy Now</button>
+                        <button onClick={()=>navigate("/shipping")} className="btn btn-danger mx-2 px-4 py-2 fw-bold shadow">Buy Now</button>
                         <button className="btn btn-warning px-4 py-2 fw-bold shadow">Add To Cart</button>
                     </div>
                 </div>
