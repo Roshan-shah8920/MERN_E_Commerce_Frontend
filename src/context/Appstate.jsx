@@ -4,8 +4,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Appstate = (props) => {
-  const url = "http://localhost:3000/api";
-  // const url = "https://mern-e-commerce-11-6.onrender.com/api";
+  // const url = "http://localhost:3000/api";
+  const url = "https://mern-e-commerce-11-7.onrender.com/api";
 
   console.log("url",url);
   
@@ -207,12 +207,32 @@ const Appstate = (props) => {
     }
   };
 
+  // 🛠 Decrease Product Quantity in Cart
+const decreaseQty = async (productId, qty = 1) => {
+  const userToken = token || localStorage.getItem("token");
+  if (!userToken || !productId) return;
+
+  try {
+      const { data } = await axios.post(
+          `${url}/cart/decrease`, 
+          { productId, qty }, 
+          { headers: { Auth: userToken }, withCredentials: true }
+      );
+      setReload(!reload); 
+      toast.success("✅ Quantity decreased!");
+  } catch (error) {
+      console.error("❌ Error decreasing quantity:", error);
+      toast.error("❌ Failed to decrease quantity!");
+  }
+};
+
+
   return (
     <AppContext.Provider value={{
       product, register, login, logout, token, isAuthentication, 
       addToCart, cart, removeFromCart, clearCart, 
       shippingAddress, getAddress, userAddress, userOrder,
-      user,url // ✅ Added user to context
+      user,url,decreaseQty
     }}>
       {props.children}
     </AppContext.Provider>
